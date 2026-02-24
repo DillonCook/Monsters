@@ -22,6 +22,10 @@ namespace Monsters.World.Runtime
         [SerializeField] private List<Vector2Int> blockedTiles = new();
         [SerializeField] private List<Vector2Int> biomeTiles = new();
 
+        [Header("Interaction Placeholders")]
+        [SerializeField] private List<Vector2Int> signTiles = new();
+        [SerializeField] private List<Vector2Int> npcTiles = new();
+
         [Header("Encounter")]
         [Range(0f, 1f)]
         [SerializeField] private float biomeEncounterChance = 0.2f;
@@ -40,10 +44,11 @@ namespace Monsters.World.Runtime
         private Vector2 _touchStart;
         private bool _isTouchTracking;
         private float _nextAllowedMoveTime;
+        private string _statusText = "Explore";
 
         private void Awake()
         {
-            _map = new GridWorldMap(BuildTileMap());
+            _map = new GridWorldMap(BuildTileMap(), BuildInteractionPoints());
             _playerMover = new PlayerGridMover(_map, playerStart);
 
             var rng = new SeededEncounterRng(encounterSeed);
@@ -53,23 +58,34 @@ namespace Monsters.World.Runtime
 
             _nextAllowedMoveTime = Time.unscaledTime + movementCooldownSeconds;
             RenderPlayer();
-            UpdateHud("Explore");
+            UpdateHud();
         }
 
         private void Update()
         {
-            if (!enableSwipeInput)
+            if (enableSwipeInput)
             {
-                return;
+                HandleSwipeInput();
             }
-
-            HandleSwipeInput();
         }
 
         public void MoveUp() => TryMove(GridDirection.Up);
         public void MoveDown() => TryMove(GridDirection.Down);
         public void MoveLeft() => TryMove(GridDirection.Left);
         public void MoveRight() => TryMove(GridDirection.Right);
+
+        public void Interact()
+        {
+            var interaction = _map.GetInteractionType(_playerMover.Position);
+            _statusText = interaction switch
+            {
+                InteractionType.Sign => "Sign: Keep moving forward",
+                InteractionType.Npc => "NPC: Battle tutorial soon",
+                _ => "Nothing to interact"
+            };
+
+            UpdateHud();
+        }
 
         private void HandleSwipeInput()
         {
@@ -94,7 +110,6 @@ namespace Monsters.World.Runtime
             if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
             {
                 _isTouchTracking = false;
-
                 if (_swipeDirectionInput.TryGetDirection(_touchStart, touch.position, out var direction))
                 {
                     TryMove(direction);
@@ -108,23 +123,28 @@ namespace Monsters.World.Runtime
             {
                 return;
             }
+
             if (!_playerMover.TryMove(direction))
             {
-                UpdateHud("Blocked");
+                _statusText = "Blocked";
+                UpdateHud();
                 return;
             }
 
+            _nextAllowedMoveTime = Time.unscaledTime + movementCooldownSeconds;
             RenderPlayer();
 
             if (!_encounterTriggerService.TryTriggerEncounter(_map, _playerMover.Position))
             {
-                UpdateHud("Move");
+                _statusText = "Move";
+                UpdateHud();
                 return;
             }
 
             WorldRuntimeState.Instance.SetCameraPosition(worldCamera != null ? worldCamera.transform.position : Vector3.zero);
             WorldRuntimeState.Instance.EnterBattle();
-            UpdateHud("Encounter!");
+            _statusText = "Encounter!";
+            UpdateHud();
 
             if (GameBootstrapper.Instance != null)
             {
@@ -158,6 +178,29 @@ namespace Monsters.World.Runtime
             return tiles;
         }
 
+        private List<WorldInteractionPoint> BuildInteractionPoints()
+        {
+            var points = new List<WorldInteractionPoint>(signTiles.Count + npcTiles.Count);
+
+            foreach (var tile in signTiles)
+            {
+                if (IsWithinMap(tile))
+                {
+                    points.Add(new WorldInteractionPoint(tile, InteractionType.Sign));
+                }
+            }
+
+            foreach (var tile in npcTiles)
+            {
+                if (IsWithinMap(tile))
+                {
+                    points.Add(new WorldInteractionPoint(tile, InteractionType.Npc));
+                }
+            }
+
+            return points;
+        }
+
         private bool IsWithinMap(Vector2Int point)
         {
             return point.x >= 0 && point.y >= 0 && point.x < mapSize.x && point.y < mapSize.y;
@@ -171,7 +214,7 @@ namespace Monsters.World.Runtime
             }
         }
 
-        private void UpdateHud(string state)
+        private void UpdateHud()
         {
             if (hudLabel == null)
             {
@@ -179,7 +222,28 @@ namespace Monsters.World.Runtime
             }
 
             var tileType = _map.GetTileType(_playerMover.Position);
-            hudLabel.text = $"{state}  X:{_playerMover.Position.x} Y:{_playerMover.Position.y} Tile:{tileType}  CD:{movementCooldownSeconds:0.00}s";
+            var interactionType = _map.GetInteractionType(_playerMover.Position);
+            hudLabel.text = $"{_statusText}  X:{_playerMover.Position.x} Y:{_playerMover.Position.y} Tile:{tileType} Int:{interactionType} CD:{movementCooldownSeconds:0.00}s";
         }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected()
+        {
+            DrawTileGizmos(blockedTiles, new Color(0.85f, 0.2f, 0.2f, 0.7f));
+            DrawTileGizmos(biomeTiles, new Color(0.2f, 0.8f, 0.2f, 0.7f));
+            DrawTileGizmos(signTiles, new Color(0.2f, 0.45f, 0.95f, 0.8f));
+            DrawTileGizmos(npcTiles, new Color(0.95f, 0.8f, 0.2f, 0.8f));
+        }
+
+        private void DrawTileGizmos(List<Vector2Int> tiles, Color color)
+        {
+            Gizmos.color = color;
+            foreach (var tile in tiles)
+            {
+                var center = new Vector3(tile.x * gridCellSize, tile.y * gridCellSize, 0f);
+                Gizmos.DrawCube(center, new Vector3(gridCellSize * 0.85f, gridCellSize * 0.85f, 0.05f));
+            }
+        }
+#endif
     }
 }

@@ -12,7 +12,7 @@ Ship the Android-first single-player MVP in **small, releasable increments**. Ea
 ---
 
 ## Current Execution Status
-- **Now executing:** Step 6 / Parcel 1 (Exploration + Encounter Trigger - input tuning).
+- **Now executing:** Step 8 / Parcel 1 (Unity test readiness and handoff).
 - Detailed implementation spec: `STEP_1_BOOTSTRAP_SPEC.md`.
 
 ---

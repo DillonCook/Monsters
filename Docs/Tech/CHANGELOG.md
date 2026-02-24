@@ -1,5 +1,20 @@
 # Changelog
 
+## Step 8 - Unity Test Readiness (Phase 1 wrap)
+- Added `Assets/Editor/BuildScript.cs` with `Monsters.Editor.BuildScript.BuildDebugAndroid`.
+- Added `Tools/unity/preflight.sh` for local Unity preflight + command guidance.
+- Updated `Tools/verify.sh` to validate build entrypoint and run Unity preflight.
+- Added `Docs/QA/UNITY_TEST_CHECKLIST.md` for Unity tester handoff.
+
+
+## Step 7 - Parcel 1 Interaction Placeholders + Gizmos
+- Added interaction tile primitives (`InteractionType`, `WorldInteractionPoint`).
+- Extended world map contracts to query interaction type by tile.
+- Added `Interact()` flow and sign/NPC tile placeholders in `TownSceneController`.
+- Added editor gizmos for blocked/biome/sign/NPC tile authoring.
+- Fixed movement cooldown application after successful movement.
+
+
 ## Step 6 - Parcel 1 Input Tuning
 - Added DPI-aware swipe threshold calculation in `SwipeDirectionInput`.
 - Updated `TownSceneController` to use inches-based swipe threshold config.
