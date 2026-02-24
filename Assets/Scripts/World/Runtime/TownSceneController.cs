@@ -29,7 +29,9 @@ namespace Monsters.World.Runtime
 
         [Header("Mobile Input")]
         [SerializeField] private bool enableSwipeInput = true;
-        [SerializeField] private float minSwipeDistancePx = 60f;
+        [SerializeField] private float minSwipeDistanceInches = 0.35f;
+        [SerializeField] private float swipeFallbackDpi = 160f;
+        [SerializeField] private float movementCooldownSeconds = 0.08f;
 
         private PlayerGridMover _playerMover;
         private GridWorldMap _map;
@@ -37,6 +39,7 @@ namespace Monsters.World.Runtime
         private SwipeDirectionInput _swipeDirectionInput;
         private Vector2 _touchStart;
         private bool _isTouchTracking;
+        private float _nextAllowedMoveTime;
 
         private void Awake()
         {
@@ -45,8 +48,10 @@ namespace Monsters.World.Runtime
 
             var rng = new SeededEncounterRng(encounterSeed);
             _encounterTriggerService = new EncounterTriggerService(rng, new EncounterConfig(biomeEncounterChance));
-            _swipeDirectionInput = new SwipeDirectionInput(minSwipeDistancePx);
+            var swipeThreshold = SwipeDirectionInput.CalculateThresholdPixels(minSwipeDistanceInches, swipeFallbackDpi);
+            _swipeDirectionInput = new SwipeDirectionInput(swipeThreshold);
 
+            _nextAllowedMoveTime = Time.unscaledTime + movementCooldownSeconds;
             RenderPlayer();
             UpdateHud("Explore");
         }
@@ -99,6 +104,10 @@ namespace Monsters.World.Runtime
 
         private void TryMove(GridDirection direction)
         {
+            if (Time.unscaledTime < _nextAllowedMoveTime)
+            {
+                return;
+            }
             if (!_playerMover.TryMove(direction))
             {
                 UpdateHud("Blocked");
@@ -170,7 +179,7 @@ namespace Monsters.World.Runtime
             }
 
             var tileType = _map.GetTileType(_playerMover.Position);
-            hudLabel.text = $"{state}  X:{_playerMover.Position.x} Y:{_playerMover.Position.y} Tile:{tileType}";
+            hudLabel.text = $"{state}  X:{_playerMover.Position.x} Y:{_playerMover.Position.y} Tile:{tileType}  CD:{movementCooldownSeconds:0.00}s";
         }
     }
 }

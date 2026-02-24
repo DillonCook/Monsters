@@ -1,5 +1,12 @@
 # Changelog
 
+## Step 6 - Parcel 1 Input Tuning
+- Added DPI-aware swipe threshold calculation in `SwipeDirectionInput`.
+- Updated `TownSceneController` to use inches-based swipe threshold config.
+- Added movement cooldown gating to avoid accidental repeated steps.
+- HUD now shows cooldown value for tuning visibility.
+
+
 ## Step 5 - Parcel 1 Mobile Input + TMP HUD
 - Added `SwipeDirectionInput` service for thumb-first swipe movement detection.
 - Updated `TownSceneController` to support swipe-driven movement while retaining button method endpoints.

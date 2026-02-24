@@ -5,17 +5,17 @@ namespace Monsters.World.Runtime
 {
     public sealed class SwipeDirectionInput
     {
-        private readonly float _minimumSwipeDistance;
+        private readonly float _minimumSwipeDistancePixels;
 
-        public SwipeDirectionInput(float minimumSwipeDistance)
+        public SwipeDirectionInput(float minimumSwipeDistancePixels)
         {
-            _minimumSwipeDistance = minimumSwipeDistance;
+            _minimumSwipeDistancePixels = Mathf.Max(1f, minimumSwipeDistancePixels);
         }
 
         public bool TryGetDirection(Vector2 startPosition, Vector2 endPosition, out GridDirection direction)
         {
             var delta = endPosition - startPosition;
-            if (delta.magnitude < _minimumSwipeDistance)
+            if (delta.magnitude < _minimumSwipeDistancePixels)
             {
                 direction = GridDirection.Up;
                 return false;
@@ -29,6 +29,12 @@ namespace Monsters.World.Runtime
 
             direction = delta.y >= 0f ? GridDirection.Up : GridDirection.Down;
             return true;
+        }
+
+        public static float CalculateThresholdPixels(float inches, float fallbackDpi = 160f)
+        {
+            var safeDpi = Screen.dpi > 0f ? Screen.dpi : fallbackDpi;
+            return Mathf.Max(1f, inches * safeDpi);
         }
     }
 }
