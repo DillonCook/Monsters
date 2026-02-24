@@ -1,0 +1,10 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+PlayerSettings:
+  companyName: Monsters Studio
+  productName: Monsters
+  defaultInterfaceOrientation: 1
+  androidMinSdkVersion: 26
+  scriptingBackend:
+    Android: 1
+  stripEngineCode: 0
