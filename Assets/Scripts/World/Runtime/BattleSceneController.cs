@@ -9,6 +9,11 @@ namespace Monsters.World.Runtime
     {
         [SerializeField] private Component battleStatusLabel;
 
+        public void Configure(Component battleStatusLabelReference)
+        {
+            battleStatusLabel = battleStatusLabelReference;
+        }
+
         private void Start()
         {
             SetLabelText("Wild encounter active");
