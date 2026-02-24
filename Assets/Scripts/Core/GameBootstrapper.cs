@@ -1,5 +1,6 @@
 using Monsters.Save;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Monsters.Core
 {
@@ -27,7 +28,10 @@ namespace Monsters.Core
             _sceneRouter = new SceneRouter();
 
             _appState = AppState.Title;
-            _sceneRouter.Load(SceneId.Title);
+            if (SceneManager.GetActiveScene().name != "TitleScene")
+            {
+                _sceneRouter.Load(SceneId.Title);
+            }
         }
 
         public void StartNewGame()
