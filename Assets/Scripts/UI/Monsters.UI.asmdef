@@ -1,0 +1,17 @@
+{
+  "name": "Monsters.UI",
+  "rootNamespace": "Monsters.UI",
+  "references": [
+    "Monsters.Core",
+    "Unity.TextMeshPro"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
