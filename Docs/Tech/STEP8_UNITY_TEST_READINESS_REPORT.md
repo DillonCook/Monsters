@@ -19,3 +19,9 @@
 1. Capture Title/Town/Battle screenshots.
 2. Log acceptance results against Parcel 1 checks.
 3. If signed off, start Parcel 2 deterministic battle core.
+
+
+## Unity 6 migration patch
+- Updated project pin to Unity `6000.3.9f1`.
+- Added package manifest with `com.unity.ugui` + `com.unity.textmeshpro` to resolve UI/TMP compile dependencies.
+- Updated preflight to assert expected Unity version and package dependencies.

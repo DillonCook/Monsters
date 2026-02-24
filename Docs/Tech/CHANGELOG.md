@@ -1,5 +1,12 @@
 # Changelog
 
+## Step 9 - Unity 6000.3.9f1 compile-fix alignment
+- Pinned `ProjectSettings/ProjectVersion.txt` to Unity `6000.3.9f1`.
+- Added `Packages/manifest.json` with `com.unity.ugui` and `com.unity.textmeshpro` dependencies.
+- Updated asmdef references to include `UnityEngine.UI` and `Unity.TextMeshPro` for UI/runtime scripts.
+- Hardened `Tools/unity/preflight.sh` with Unity version + package dependency checks.
+
+
 ## Step 8 - Unity Test Readiness (Phase 1 wrap)
 - Added `Assets/Editor/BuildScript.cs` with `Monsters.Editor.BuildScript.BuildDebugAndroid`.
 - Added `Tools/unity/preflight.sh` for local Unity preflight + command guidance.

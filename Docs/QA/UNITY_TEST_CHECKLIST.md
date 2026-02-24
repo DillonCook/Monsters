@@ -4,7 +4,7 @@
 Enable a developer/tester to open the project in Unity and validate Parcel 1 quickly on Android-oriented flows.
 
 ## Environment
-- Unity version: `2022.3.25f1` (from `ProjectSettings/ProjectVersion.txt`).
+- Unity version: `6000.3.9f1` (from `ProjectSettings/ProjectVersion.txt`).
 - Open project root and allow script compilation.
 
 ## Scene wiring checklist
