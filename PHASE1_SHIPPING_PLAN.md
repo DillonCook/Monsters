@@ -12,7 +12,7 @@ Ship the Android-first single-player MVP in **small, releasable increments**. Ea
 ---
 
 ## Current Execution Status
-- **Now executing:** Step 1 / Parcel 0 (Project Bootstrap).
+- **Now executing:** Step 9 / Parcel 1 (Unity 6000.3.9f1 compile-fix alignment).
 - Detailed implementation spec: `STEP_1_BOOTSTRAP_SPEC.md`.
 
 ---
