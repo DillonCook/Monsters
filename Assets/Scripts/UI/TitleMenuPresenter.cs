@@ -9,6 +9,12 @@ namespace Monsters.UI
         [SerializeField] private GameObject settingsPanel;
         [SerializeField] private Component continueStatusLabel;
 
+        public void Configure(GameObject settingsPanelReference, Component statusLabelReference)
+        {
+            settingsPanel = settingsPanelReference;
+            continueStatusLabel = statusLabelReference;
+        }
+
         private void Start()
         {
             if (settingsPanel != null)

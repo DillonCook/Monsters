@@ -16,8 +16,8 @@ namespace Monsters.World.Runtime
         [SerializeField] private Component hudLabel;
 
         [Header("Map")]
-        [SerializeField] private Vector2Int mapSize = new(12, 16);
-        [SerializeField] private Vector2Int playerStart = new(1, 1);
+        [SerializeField] private Vector2Int mapSize = new(8, 8);
+        [SerializeField] private Vector2Int playerStart = new(3, 3);
         [SerializeField] private float gridCellSize = 1f;
         [SerializeField] private List<Vector2Int> blockedTiles = new();
         [SerializeField] private List<Vector2Int> biomeTiles = new();
@@ -46,8 +46,20 @@ namespace Monsters.World.Runtime
         private float _nextAllowedMoveTime;
         private string _statusText = "Explore";
 
+        public float GridCellSize => gridCellSize;
+        public Vector2Int MapSize => mapSize;
+
+        public void Configure(Transform playerVisualReference, Camera worldCameraReference, Component hudLabelReference)
+        {
+            playerVisual = playerVisualReference;
+            worldCamera = worldCameraReference;
+            hudLabel = hudLabelReference;
+        }
+
         private void Awake()
         {
+            EnsureDefaultLayout();
+
             _map = new GridWorldMap(BuildTileMap(), BuildInteractionPoints());
             _playerMover = new PlayerGridMover(_map, playerStart);
 
@@ -155,6 +167,41 @@ namespace Monsters.World.Runtime
             SceneManager.LoadScene("BattleScene");
         }
 
+        private void EnsureDefaultLayout()
+        {
+            if (blockedTiles.Count == 0)
+            {
+                for (var x = 0; x < mapSize.x; x++)
+                {
+                    blockedTiles.Add(new Vector2Int(x, 0));
+                    blockedTiles.Add(new Vector2Int(x, mapSize.y - 1));
+                }
+
+                for (var y = 1; y < mapSize.y - 1; y++)
+                {
+                    blockedTiles.Add(new Vector2Int(0, y));
+                    blockedTiles.Add(new Vector2Int(mapSize.x - 1, y));
+                }
+            }
+
+            if (biomeTiles.Count == 0)
+            {
+                biomeTiles.Add(new Vector2Int(mapSize.x - 3, mapSize.y - 3));
+                biomeTiles.Add(new Vector2Int(mapSize.x - 3, mapSize.y - 4));
+                biomeTiles.Add(new Vector2Int(mapSize.x - 4, mapSize.y - 3));
+            }
+
+            if (signTiles.Count == 0)
+            {
+                signTiles.Add(new Vector2Int(2, 2));
+            }
+
+            if (npcTiles.Count == 0)
+            {
+                npcTiles.Add(new Vector2Int(mapSize.x - 3, 2));
+            }
+        }
+
         private WorldTileType[,] BuildTileMap()
         {
             var tiles = new WorldTileType[mapSize.x, mapSize.y];
@@ -223,7 +270,7 @@ namespace Monsters.World.Runtime
 
             var tileType = _map.GetTileType(_playerMover.Position);
             var interactionType = _map.GetInteractionType(_playerMover.Position);
-            var textValue = $"{_statusText}  X:{_playerMover.Position.x} Y:{_playerMover.Position.y} Tile:{tileType} Int:{interactionType} CD:{movementCooldownSeconds:0.00}s";
+            var textValue = $"{_statusText}  X:{_playerMover.Position.x} Y:{_playerMover.Position.y} Tile:{tileType} Int:{interactionType}";
             SetLabelText(hudLabel, textValue);
         }
 
