@@ -2,9 +2,9 @@
 
 ## Step 9 - Unity 6000.3.9f1 compile-fix alignment
 - Pinned `ProjectSettings/ProjectVersion.txt` to Unity `6000.3.9f1`.
-- Added `Packages/manifest.json` with `com.unity.ugui` and `com.unity.textmeshpro` dependencies.
-- Updated asmdef references to include `UnityEngine.UI` and `Unity.TextMeshPro` for UI/runtime scripts.
-- Hardened `Tools/unity/preflight.sh` with Unity version + package dependency checks.
+- Reworked UI runtime scripts to remove hard compile-time dependency on TMP/uGUI types (`Component` + safe text reflection).
+- Updated `TitleMenuPresenter` to inspector-driven button handlers for safer cross-version compatibility.
+- Hardened `Tools/unity/preflight.sh` with Unity version checks and build entrypoint validation.
 
 
 ## Step 8 - Unity Test Readiness (Phase 1 wrap)

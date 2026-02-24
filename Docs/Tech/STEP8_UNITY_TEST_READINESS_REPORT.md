@@ -23,5 +23,5 @@
 
 ## Unity 6 migration patch
 - Updated project pin to Unity `6000.3.9f1`.
-- Added package manifest with `com.unity.ugui` + `com.unity.textmeshpro` to resolve UI/TMP compile dependencies.
-- Updated preflight to assert expected Unity version and package dependencies.
+- Removed hard compile-time TMP/uGUI dependency from runtime scripts to avoid Safe Mode lock when those packages are unavailable.
+- Updated preflight to assert expected Unity version and build entrypoint integrity.

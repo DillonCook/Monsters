@@ -2,9 +2,7 @@
   "name": "Monsters.UI",
   "rootNamespace": "Monsters.UI",
   "references": [
-    "Monsters.Core",
-    "Unity.TextMeshPro",
-    "UnityEngine.UI"
+    "Monsters.Core"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

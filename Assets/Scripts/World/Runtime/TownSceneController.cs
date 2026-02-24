@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using System.Reflection;
 using Monsters.Core;
 using Monsters.World.Encounter;
 using Monsters.World.Movement;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +13,7 @@ namespace Monsters.World.Runtime
         [Header("Dependencies")]
         [SerializeField] private Transform playerVisual;
         [SerializeField] private Camera worldCamera;
-        [SerializeField] private TMP_Text hudLabel;
+        [SerializeField] private Component hudLabel;
 
         [Header("Map")]
         [SerializeField] private Vector2Int mapSize = new(12, 16);
@@ -223,7 +223,22 @@ namespace Monsters.World.Runtime
 
             var tileType = _map.GetTileType(_playerMover.Position);
             var interactionType = _map.GetInteractionType(_playerMover.Position);
-            hudLabel.text = $"{_statusText}  X:{_playerMover.Position.x} Y:{_playerMover.Position.y} Tile:{tileType} Int:{interactionType} CD:{movementCooldownSeconds:0.00}s";
+            var textValue = $"{_statusText}  X:{_playerMover.Position.x} Y:{_playerMover.Position.y} Tile:{tileType} Int:{interactionType} CD:{movementCooldownSeconds:0.00}s";
+            SetLabelText(hudLabel, textValue);
+        }
+
+        private static void SetLabelText(Component target, string value)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            var textProperty = target.GetType().GetProperty("text", BindingFlags.Instance | BindingFlags.Public);
+            if (textProperty != null && textProperty.CanWrite)
+            {
+                textProperty.SetValue(target, value);
+            }
         }
 
 #if UNITY_EDITOR

@@ -9,17 +9,17 @@ Enable a developer/tester to open the project in Unity and validate Parcel 1 qui
 
 ## Scene wiring checklist
 1. Open `TitleScene` and ensure a root object has `GameBootstrapper`.
-2. In `TitleScene`, wire `TitleMenuPresenter` buttons and TMP status label.
+2. In `TitleScene`, wire `TitleMenuPresenter` button `OnClick` handlers (`OnNewGameClicked`, `OnContinueClicked`, `OnSettingsClicked`) and assign a status label component (TMP or legacy Text).
 3. Open `TownScene` and wire `TownSceneController` references:
    - `playerVisual`
    - `worldCamera`
-   - `hudLabel` (TMP)
+   - `hudLabel` (Component pointing to TMP or legacy Text)
 4. Assign sample tile coordinates:
    - `blockedTiles`: e.g. `(3,3)`, `(3,4)`
    - `biomeTiles`: e.g. `(6,6)`, `(6,7)`
    - `signTiles`: e.g. `(2,1)`
    - `npcTiles`: e.g. `(4,2)`
-5. Open `BattleScene` and wire `BattleSceneController` TMP label + Return button.
+5. Open `BattleScene` and wire `BattleSceneController` status label component (TMP or legacy Text) + Return button.
 
 ## Runtime checks
 1. Launch app: confirm title in <3 seconds.

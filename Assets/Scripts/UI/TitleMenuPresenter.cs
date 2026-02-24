@@ -1,53 +1,67 @@
+using System.Reflection;
 using Monsters.Core;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Monsters.UI
 {
     public sealed class TitleMenuPresenter : MonoBehaviour
     {
-        [SerializeField] private Button newGameButton;
-        [SerializeField] private Button continueButton;
-        [SerializeField] private Button settingsButton;
         [SerializeField] private GameObject settingsPanel;
-        [SerializeField] private TMP_Text continueStatusLabel;
+        [SerializeField] private Component continueStatusLabel;
 
         private void Start()
         {
-            newGameButton.onClick.AddListener(OnNewGameClicked);
-            continueButton.onClick.AddListener(OnContinueClicked);
-            settingsButton.onClick.AddListener(OnSettingsClicked);
-            settingsPanel.SetActive(false);
-            continueStatusLabel.text = "No save yet";
+            if (settingsPanel != null)
+            {
+                settingsPanel.SetActive(false);
+            }
+
+            SetStatusLabel("No save yet");
         }
 
-        private void OnNewGameClicked()
+        public void OnNewGameClicked()
         {
             if (GameBootstrapper.Instance == null)
             {
-                continueStatusLabel.text = "System loading";
+                SetStatusLabel("System loading");
                 return;
             }
 
             GameBootstrapper.Instance.StartNewGame();
         }
 
-        private void OnContinueClicked()
+        public void OnContinueClicked()
         {
             if (GameBootstrapper.Instance == null)
             {
-                continueStatusLabel.text = "System loading";
+                SetStatusLabel("System loading");
                 return;
             }
 
             var loaded = GameBootstrapper.Instance.TryContinue();
-            continueStatusLabel.text = loaded ? string.Empty : "No save found";
+            SetStatusLabel(loaded ? string.Empty : "No save found");
         }
 
-        private void OnSettingsClicked()
+        public void OnSettingsClicked()
         {
-            settingsPanel.SetActive(!settingsPanel.activeSelf);
+            if (settingsPanel != null)
+            {
+                settingsPanel.SetActive(!settingsPanel.activeSelf);
+            }
+        }
+
+        private void SetStatusLabel(string value)
+        {
+            if (continueStatusLabel == null)
+            {
+                return;
+            }
+
+            var textProperty = continueStatusLabel.GetType().GetProperty("text", BindingFlags.Instance | BindingFlags.Public);
+            if (textProperty != null && textProperty.CanWrite)
+            {
+                textProperty.SetValue(continueStatusLabel, value);
+            }
         }
     }
 }

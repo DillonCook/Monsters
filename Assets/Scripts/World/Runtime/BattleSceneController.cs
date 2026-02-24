@@ -1,5 +1,5 @@
+using System.Reflection;
 using Monsters.Core;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,14 +7,11 @@ namespace Monsters.World.Runtime
 {
     public sealed class BattleSceneController : MonoBehaviour
     {
-        [SerializeField] private TMP_Text battleStatusLabel;
+        [SerializeField] private Component battleStatusLabel;
 
         private void Start()
         {
-            if (battleStatusLabel != null)
-            {
-                battleStatusLabel.text = "Wild encounter active";
-            }
+            SetLabelText("Wild encounter active");
         }
 
         public void ReturnToTown()
@@ -28,6 +25,20 @@ namespace Monsters.World.Runtime
             }
 
             SceneManager.LoadScene("TownScene");
+        }
+
+        private void SetLabelText(string value)
+        {
+            if (battleStatusLabel == null)
+            {
+                return;
+            }
+
+            var textProperty = battleStatusLabel.GetType().GetProperty("text", BindingFlags.Instance | BindingFlags.Public);
+            if (textProperty != null && textProperty.CanWrite)
+            {
+                textProperty.SetValue(battleStatusLabel, value);
+            }
         }
     }
 }

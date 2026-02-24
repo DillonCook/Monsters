@@ -15,7 +15,6 @@ required_files=(
   "Assets/Scenes/TitleScene.unity"
   "Assets/Scenes/TownScene.unity"
   "Assets/Scenes/BattleScene.unity"
-  "Packages/manifest.json"
 )
 
 for file in "${required_files[@]}"; do
@@ -27,16 +26,6 @@ done
 
 if ! rg -q 'm_EditorVersion: 6000.3.9f1' ProjectSettings/ProjectVersion.txt; then
   echo "[preflight] ProjectVersion mismatch. Expected Unity $TARGET_UNITY_VERSION"
-  exit 1
-fi
-
-if ! rg -q 'com.unity.ugui' Packages/manifest.json; then
-  echo "[preflight] Missing package dependency: com.unity.ugui"
-  exit 1
-fi
-
-if ! rg -q 'com.unity.textmeshpro' Packages/manifest.json; then
-  echo "[preflight] Missing package dependency: com.unity.textmeshpro"
   exit 1
 fi
 
