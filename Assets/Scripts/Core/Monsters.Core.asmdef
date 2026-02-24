@@ -2,7 +2,9 @@
   "name": "Monsters.Core",
   "rootNamespace": "Monsters.Core",
   "references": [
-    "Monsters.Save"
+    "Monsters.Save",
+    "Monsters.UI",
+    "Monsters.World"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
