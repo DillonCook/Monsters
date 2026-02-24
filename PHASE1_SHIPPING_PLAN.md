@@ -12,8 +12,13 @@ Ship the Android-first single-player MVP in **small, releasable increments**. Ea
 ---
 
 ## Current Execution Status
-- **Now executing:** Step 1 / Parcel 0 (Project Bootstrap).
-- Detailed implementation spec: `STEP_1_BOOTSTRAP_SPEC.md`.
+- **Execution bundle requested:** Steps 4, 5, 6, 7, and 8.
+- Step 4 spec: `STEP_4_TAMING_SYSTEM_SPEC.md`.
+- Step 5 spec: `STEP_5_PARTY_RELEASE_UX_SPEC.md`.
+- Step 6 spec: `STEP_6_SAVE_LOAD_SPEC.md`.
+- Step 7 spec: `STEP_7_POLISH_PERFORMANCE_SPEC.md`.
+- Step 8 spec: `STEP_8_PREALPHA_RELEASE_GATE_SPEC.md`.
+- Report templates added in `Docs/Tech/` for each step.
 
 ---
 
